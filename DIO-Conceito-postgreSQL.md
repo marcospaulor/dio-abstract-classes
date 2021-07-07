@@ -124,7 +124,7 @@
     - `WORK_MEM`: tamanho da memória para operações de agrupamento e ordenação (*ORDER BY*, *DISTINCT*,*MERGE JOINS*).
     - `MAINTENCE_WORK_MEM`: tamanho da memória para operações com *VACUUM*, *INDEX*, *ALTER TABLE*.
 
-- ### `pg_hba.cong`
+- ### `pg_hba.conf`
 
   `Definição`: arquivo responsável pelo controle de autenticação dos usuários no servidor PostgreSQL.
 
@@ -147,10 +147,10 @@
     **Exemplo:**
 
     ```bash
-    #TYPE	DATABASE	USER  ADDRESS		METHOD
-    local	all			all					peer
-    #IPv4 local connections:
-    host	all			all	  127.0.0.1/32	md5
+    #	TYPE	DATABASE	USER  ADDRESS			METHOD
+    	local	all			all						peer
+    #	IPv4 local connections:
+    	host	all			all	  127.0.0.1/32		md5
     ```
 
 - ### `pg_ident.conf`
