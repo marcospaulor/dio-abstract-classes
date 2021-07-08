@@ -147,17 +147,57 @@
     **Exemplo:**
 
     ```bash
-    #	TYPE	DATABASE	USER  ADDRESS			METHOD
-    	local	all			all						peer
-    #	IPv4 local connections:
-    	host	all			all	  127.0.0.1/32		md5
+    #TYPE		DATABASE	USER  	ADDRESS			METHOD
+    local		all			all						peer
+    #IPv4 local connections:
+    host		all			all	  	127.0.0.1/32	md5
     ```
 
 - ### `pg_ident.conf`
 
-  `Definição`: arquivo responsável por mapear os usuários do sistema operacional como os usuários do banco de dados. Localizado no diretório de dados PGDATA de sua instalação.
+  `Definição`: arquivo responsável por mapear os usuários do sistema operacional como os usuários do banco de dados. Localizado no diretório de dados PGDATA de sua instalação. A opção ident deve ser utilizada no arquivo pg_hba.conf.
 
-  A opção ident deve ser utilizada no arquivo pg_hba.conf.
+  **Exemplo:**
 
-- 
+  ```bash
+  #	MAPNAME			SYSTEM-USERNAME		PG-USERNAME
+  	diretoria		marcos				pg_diretoria
+  	comercial		fulano				pg-comercial
+  ```
+
+- ### `Comandos administrativos`
+
+  **Ubuntu**:
+
+  - `pg_lscluters`: lista todos os clusters PostgreSQL.
+  - `pg_createcluster <version> <cluster name>`: cria um novo cluster PostgreSQL.
+  - `pg_dropcluster <version> <cluster>`: apaga um cluster PostgreSQL
+  - `pg_cllcluster <version> <cluster> <action>`: *START*, *STOP*, *STATUS*, *RESTART* de clusters PostgreSQL.
+
+  **Windows**:
+
+  Como dito antes é simples, basta iniciar o serviço do postgresql-<versão> no sistema de serviços do Windows, caso ele não esteja com inicialização automática.
+
+- ### `Binários PostgreSQL`
+
+  - `ceatedb`
+  - `createuser`
+  - `dropdb`
+  - `dropuser`
+  - `initdb`
+  - `pg_clt`
+  - `pg_basebackup`
+  - `pg_dump / pg_dumpall`
+  - `pg_restore`
+  - `psql`
+  - `reindexdb`
+  - `vacuumdb`
+
+- ### `Arquitetura / Hierarquia`
+
+  - `Cluster`: coleção de banco de dados que compartilhamos as mesmas configurações (arquivos de configuração) do PostgreSQL e do sistema operacional (porta, listen_addresses, etc).
+  - `Banco de dados (Database)`:  conjunto de **schemas** com seus objetos/relações (tabelas, funções, views, etc).
+  - `Schema`: conjunto de objetos/relações (tabelas, funções, views, etc).
+
+## PGAdmin
 
