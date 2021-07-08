@@ -161,8 +161,8 @@
 
   ```shell
   #	MAPNAME	    |  SYSTEM-USERNAME	|  PG-USERNAME
-  	diretoria   |   marcos			|  pg_diretoria
-  	comercial   |   fulano			|  pg-comercial
+  	diretoria   |   marcos          |  pg_diretoria
+  	comercial   |   fulano          |  pg-comercial
   ```
 
 - ### `Comandos administrativos`
@@ -201,3 +201,81 @@
 
 ## PGAdmin
 
+`Site oficial`: [https://www.pgadmin.org/]()
+
+`Documentação`:[https://www.pgadmin.org/docs/pgadmin4/latest/index.html]()
+
+**Importante para conexão:**
+
+1. Liberar acesso ao cluster em `postgresql.conf`
+2. Liberar acesso ao cluster para o usuário do banco de dados em `pg_hba.conf`
+3. Criar/editar usuários
+
+*Não tem muito o que falar sobre pois é interface gráfica, geralmente a documentação possui tudo.*
+
+## Configurando Usuários
+
+- #### `Conceitos de Users/Roles/Groups`
+
+  `Definição`:
+
+  ​	**Roles** (*papéis ou funções*), **users** (*usuários*) e **grupo de usuários** são "*contas*", perfis de atuação em um bando de dados, que possuem permissões em comum ou específicas.
+
+  *Há a possibilidade de que roles pertençam a outras roles.*
+
+- #### `Administrando Users/Roles/Groups`
+
+  Alguns privilégios de controle de roles:
+
+  ```sql
+  CREATE ROLE name [[WITH] option [...]]
+  
+  -- Daqui para baixo são comentários V
+  -- where option can be:
+  -- SUPERUSER    | NOSUPERUSER
+  -- | CREATEDB   | NOCREATEDB
+  -- | CREATEROLE | NOCREATEROLE
+  -- | INHERIT    | NOINHERIT
+  -- | LOGIN      | NOLOGIN
+  -- | REPLICATION | NOREPLICATION
+  -- | BYPASSRLS  | NOBYPASSRLS
+  -- | CONNECTION LIMIT conlimit
+  -- | [ECRYPTED] PASSWORD 'password' | PASSWORD NULL
+  -- | VALID UNTIL 'timestamp'
+  -- | IN ROLE role_name [...]
+  -- | IN GROUP role_name [...]
+  -- | ROLE role_name [...]
+  -- | ADMIN role_name [...]
+  -- | USER role_name [...]
+  -- | SYSSID uid
+  ```
+
+  **Exemplo:**
+
+  ```sql
+  CREATE ROLE administradores
+  	CREATEDB
+  	CREATEROLE
+  	INHERIT
+  	NOLOGIN
+  	REPLICATION
+  	BYPASSRLS
+  	CONECTION LIMIT -1
+  ```
+
+  - #### `Associação entre roles`
+
+    Quando uma role assume as permissões de outra role. Necessário a opção ***INHERIT***.
+
+    No momento da criação da role:
+
+    - `IN ROLE`: passa a pertencer a role informada.
+    - `ROLE`: a role informada passa a pertencer a nova role.
+
+    Após a criação da role:
+
+    ```sql
+    GRANT [role a ser concedida] TO [role a assumir permissões]
+    ```
+
+    
