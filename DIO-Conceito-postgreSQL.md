@@ -146,20 +146,23 @@
 
     **Exemplo:**
 
-    ```clike
-    printf("#type\tDATABASE\tUSER\tADDRESS\tMETHOD\nlocal\tall\tall\t\tpeer\n#IPv4 local connections:\nhost\tall\tall\t127.0.0.1/32\tmd5");
+    ```shell
+    #TYPE	|	DATABASE	|	USER  	|	ADDRESS		|	METHOD
+    local	|	all			|	all		|				|	peer
+    #IPv4 local connections:
+    host	|	all			|	all	  	|	127.0.0.1/32|	md5
     ```
-
+  
 - ### `pg_ident.conf`
 
   `Definição`: arquivo responsável por mapear os usuários do sistema operacional como os usuários do banco de dados. Localizado no diretório de dados PGDATA de sua instalação. A opção ident deve ser utilizada no arquivo pg_hba.conf.
 
   **Exemplo:**
 
-  ```sh
-  #	MAPNAME					SYSTEM-USERNAME							PG-USERNAME
-  	diretoria				marcos				    		pg_diretoria
-  	comercial				fulano				    		pg-comercial
+  ```shell
+  #	MAPNAME		|	SYSTEM-USERNAME			|		PG-USERNAME
+  	diretoria	|			marcos			|	    pg_diretoria
+  	comercial	|			fulano			|	    pg-comercial
   ```
 
 - ### `Comandos administrativos`
