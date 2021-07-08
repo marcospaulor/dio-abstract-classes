@@ -146,11 +146,11 @@
 
     **Exemplo:**
 
-    ```bash
-    #TYPE		DATABASE	USER  ADDRESS			  METHOD
-    local		all			all						        peer
+    ```
+    #TYPE		DATABASE		USER  		ADDRESS				METHOD
+    local		all				all									peer
     #IPv4 local connections:
-    host		all			all	  	127.0.0.1/32	md5
+    host		all				all	  		127.0.0.1/32			md5
     ```
 
 - ### `pg_ident.conf`
@@ -159,10 +159,10 @@
 
   **Exemplo:**
 
-  ```bash
-  #	MAPNAME			SYSTEM-USERNAME		PG-USERNAME
-  	diretoria		marcos				    pg_diretoria
-  	comercial		fulano				    pg-comercial
+  ```
+  #	MAPNAME					SYSTEM-USERNAME							PG-USERNAME
+  	diretoria				marcos				    		pg_diretoria
+  	comercial				fulano				    		pg-comercial
   ```
 
 - ### `Comandos administrativos`
