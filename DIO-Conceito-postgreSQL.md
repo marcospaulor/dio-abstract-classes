@@ -146,7 +146,7 @@
 
     **Exemplo:**
 
-    ```
+    ```sh
     #TYPE		DATABASE		USER  		ADDRESS				METHOD
     local		all				all									peer
     #IPv4 local connections:
@@ -159,7 +159,7 @@
 
   **Exemplo:**
 
-  ```
+  ```sh
   #	MAPNAME					SYSTEM-USERNAME							PG-USERNAME
   	diretoria				marcos				    		pg_diretoria
   	comercial				fulano				    		pg-comercial
