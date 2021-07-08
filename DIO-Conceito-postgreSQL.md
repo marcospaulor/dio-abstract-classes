@@ -146,11 +146,8 @@
 
     **Exemplo:**
 
-    ```sh
-    #TYPE		DATABASE		USER  		ADDRESS				METHOD
-    local		all				all									peer
-    #IPv4 local connections:
-    host		all				all	  		127.0.0.1/32			md5
+    ```clike
+    printf("#type\tDATABASE\tUSER\tADDRESS\tMETHOD\nlocal\tall\tall\t\tpeer\n#IPv4 local connections:\nhost\tall\tall\t127.0.0.1/32\tmd5");
     ```
 
 - ### `pg_ident.conf`
