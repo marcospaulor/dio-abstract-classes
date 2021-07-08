@@ -152,7 +152,7 @@
     #IPv4 local connections:
     host    |   all      |   all   | 127.0.0.1/32|	md5
     ```
-  
+
 - ### `pg_ident.conf`
 
   `Definição`: arquivo responsável por mapear os usuários do sistema operacional como os usuários do banco de dados. Localizado no diretório de dados PGDATA de sua instalação. A opção ident deve ser utilizada no arquivo pg_hba.conf.
@@ -228,7 +228,7 @@
   Alguns privilégios de controle de roles:
 
   ```sql
-  CREATE ROLE name [[WITH] option [...]]
+  CREATE ROLE name [[WITH] option [...]];
   
   -- Daqui para baixo são comentários V
   -- where option can be:
@@ -260,7 +260,7 @@
   	NOLOGIN
   	REPLICATION
   	BYPASSRLS
-  	CONECTION LIMIT -1
+  	CONECTION LIMIT -1;
   ```
 
   - #### `Associação entre roles`
@@ -275,7 +275,71 @@
     Após a criação da role:
 
     ```sql
-    GRANT [role a ser concedida] TO [role a assumir permissões]
+    GRANT [role a ser concedida] TO [role a assumir permissões];
     ```
 
-    
+  - #### `Desassociar membros entre roles`
+
+    ```sql
+    REVOKE [role a ser revogada] FROM [ role que terá suas permissões revogadas];
+    ```
+
+  - #### `Alteração de roles`
+
+    ```sql
+    ALTER ROLE role_specification [WITH] option [...];
+    -- Option possui as mesmas chaves o create
+    ```
+
+  - #### `Exluindo uma role`
+
+    ```sql
+    DROP ROLE role_specification;
+    ```
+
+- ### `Grant`
+
+  `Definição`: são privilégios de acesso aos objetos do banco de dados.
+
+  Privilégios:
+
+  **--tabela**                                                      **--function**
+
+  --coluna                                                      --language
+  --sequence                                                --large object
+  **--database**                                               **--schema**
+  --domain                                                  --tablespace
+  --foreign data wrapper                          --type
+  --foreign server
+
+  `DATABASE`:
+
+  ```sql
+  DATABASE GRANT {{CREATE|CONNECT|TEMPORARY|TEMP} [...] | ALL [PRIVILEGES]]} ON DATABASE database_name [...] TO role_specification [...] [WITH GRANT OPTION];
+  ```
+
+  `SCHEMA`:
+
+  ```sql
+  SCHEMA GRANT {{CREATE|USAGE}[...] | ALL [PRIVILEGES]} ON SCHEMA schema_name [...] TO role_specification [...] [WITH GRANT OPTION];
+  ```
+
+  `TABLE`:
+
+  ```sql
+  TABLE {{SELECT|INSERT|UPDATE|TRUNCATE|REFERENCES|TRIGGER} [...] | ALL [PRIVILEGES]} ON {[TABLE] table_name [...] | AL TABLES IN SCHEMA schema_name [...]} TO role_specification [...] [WITH GRANT OPTION];
+  ```
+
+  Para remover privilégios utiliza-se o `Revoke`:
+
+  Por exemplo:
+
+  ```SQL
+  {DATABASE|SCHEMA|TABLE} REVOKE [GRANT OPTION FOR] {{TODAS AS OPÇÕES DAS RESPCTIVAS} [...] | ALL [PRIVILEGES] ON {DATABASE|SCHEMA|TABLE} {database|schema|table}_name[...] FROM {[GROUP] role_name | PUBLIC} [...] [CASCADE | RESTRICT];
+  ```
+
+  *Onde possui mais de uma opção, significa a escolha de somente uma e não possui chaves*.
+
+  
+
+## Objetos e comandos do banco de dados
