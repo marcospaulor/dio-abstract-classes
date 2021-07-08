@@ -343,3 +343,204 @@
   
 
 ## Objetos e comandos do banco de dados
+
+- #### `Database`: é o banco de dados. Grupo de schemas e seus objetos, como tabelas, types, views, funções, entre outros. Seus schemas e objetos não podem ser compartilhados entre si. Cada database é separado um do outro compartilhando apenas usuários/roles e configurações do cluster PostgreSQL.
+
+  - Criar database:
+
+    ```sql
+    CREATE DATABASE name [[WITH] 
+        [OWNER [=] user_name]
+    	[TEMPLATE [=] template]
+    	[ENCODIN] [=] encodin]
+    	[LC_COLLATE [=] lc_collate]
+    	[LC_CTYPE [=] lc_ctype]
+    	[TABELSPACE [=] tablespace_name]
+    	[ALLOW_CONNECTIONS [=] allowconn]
+    	[CONNECTION LIMIT [=] connlimit]
+    	[IS_TEMPLATE [=] istemplate]];
+    ```
+
+  - Alterar database:
+
+    ```sql
+    ALTER DATABASE name RENAME TO new_name;
+    ALTER DATABASE name OWNER TO {new_owner | CURRENT_USER | SESSION_USER};
+    ALTER DATABASE name SET TABLESPACE new_tablespace;
+    ```
+
+  - Deletar database:
+
+    ```sql
+    DROP DATABASE [name];
+    ```
+
+    
+
+- #### `Schemas`: é um grupo de objetos, como tabelas, types, views, funções, entre outros. É possível relacionar objetos entre diversos schemas. Por exemplo: schema public e schema curso podem ter tabelas com o mesmo nome (teste por exemplo) relacionando-se entre si.
+
+  - Criar schema: 
+
+    ```sql
+    CREATE SCHEMA schema_name [AUTHORIZATION role_specification];
+    ```
+
+  - Alterar schema:
+
+    ```sql
+    ALTER SCHEMA name RENAME TO new_name;
+    ALTER SCHEMA name OWNER TO {new_owner | CURRENT_USER | SESSION_USER};
+    ```
+
+  - Deletar schema:
+
+    ```sql
+    DROP SCHEMA [name];
+    ```
+
+  - Boas práticas:
+
+    ```sql
+    CREATE SCHEMA IF NOT EXISTS schema_name [AUTHORIZATION role_specification];
+    DROP SCHEMA IF EXISTS [name];
+    ```
+
+    
+
+- #### `Objetos`: são tabelas, views, funções, types, sequences, entre outros, pertencentes aos schemas.
+
+- #### `Tabelas`: conjunto de dados dispostos em colunas e linhas referentes a um objetivo comum.
+
+- #### `Colunas`: as colunas são consideradas como "campos de tabela", como atributos da tabela.
+
+- #### `Linhas`: as linhas de uma tabela são chamadas também de tuplas, e é onde estão contidos os valores, os dados.
+
+- #### `Primary Key / Chave Primária / PK`: no conceito de modelo de dados relacional e obedecendo as regras de normalização, uma PK é um conjunto de um ou mais campos que nunca se repetem em uma tabela e que seus valores garantem a integridade do dado único e a utilização do mesmo como referência para o relacionamento entre demais tabelas.
+
+  - Não pode haver duas ocorrências de uma mesma entidade com o mesmo conteúdo na PK.
+  - A chave primária não pode ser composta por atributo opcional, ou seja, atributo que aceite nulo.
+  - Os atributos identificadores devem ser o conjunto mínimo que pode identificar cada instância de uma entidade.
+  - Não devem ser usadas como chaves internas.
+  - Não devem conter informação volátil.
+
+- #### `Foreign Key / Chave Estrangeira / FK`: campo, ou conjunto de campos que são referência de chaves primárias de outras tabelas ou da mesma tabela. Sua principal função é garantir a integridade referencial entre tabelas.
+
+- #### `Tipos`:
+
+  **Numeric Types**                                       UUID Types
+
+  Monetary Types                                      XML Types
+
+  **Character Types**                                    JSON Types
+
+  Binary Data Types                                  Arrays
+
+  **Date/Time Types**                                   Composite Types
+
+  **Boolean Types**                                       Range Types
+
+  Enumerated Types                                 Domain Types
+
+  Geometric Types                                    Object Identifier Types
+
+  Network Address Types                       pg_Isn Types
+
+  Bit String Types                                     Pseudo-Types
+
+  Text Search Types
+
+  - Numéricos:
+
+    - smallint
+    - integer
+    - bigint
+    - decimal
+    - numeric
+    - real
+    - double precision
+    - smallserial
+    - serial
+    - bigserial
+
+  - Caracteres:
+
+    - charcater varying / varchar
+    - character  / char
+    - text
+
+  - Datas:
+
+    - timestamp [without time zone]
+    - timestamp [with time zone]
+    - date
+    - time [without time zone]
+    - time [with time zone]
+    - interval
+
+  - Booleanos
+
+    - boolean
+
+  - #### `DML`: Data manipulation Language - linguagem de manipulação de dados - INSERT, UPDATE, DELETE, SELECT(consideram também como DQL, data query language).
+
+    ```sql
+    CREATE TABLE [IF NOT EXISTS] [nome da tabela] (
+    	[nome do campo] [tipo] [regras] [opções],
+    	[nome do campo] [tipo] [regras] [opções],
+    	[nome do campo] [tipo] [regras] [opções]
+    );
+    ```
+
+    ```sql
+    ALTER TABLE [nome da tabela] [opções];
+    ```
+
+    ```sql
+    DROP TABLE [nome da tabela];
+    ```
+
+    ```sql
+    INSERT INTO [nome da tabela] ([campos da tabela,]) VALUES ([valores de acordo com a ordem dos campos da tabela]);
+    INSERT INTO [nome da tabela] ([campos da tabela,]) SELECT ([valores de acordo com a ordem dos campos da tabela]);
+    ```
+
+    ```sql
+    UPDATE [nome da tabela] SET 
+    	[campo1] = [novo valor],
+    	[campo2] = [novo valor],
+    	...
+    	[WHERE + condições];
+    ```
+
+    *O update deve ser sempre utilizado com **Condição***.
+
+    ```sql
+    DELETE FROM [nome da tabela] [WHERE + condiçoes];
+    ```
+
+    *O delete deve ser sempre utilizado com **Condição***.
+
+    ```sql
+    SELECT [campos da tabela] FROM [nome da tabela] [WHERE + condições];
+    ```
+
+    *Evite sempre que puder o `SELECT *`*
+
+  - #### `DDL`: Data Definition Language - linguagem de definição de dados - CREATE, ALTER, DROP.
+
+    ```sql
+    CREATE [objeto] [nome do objeto] [opções];
+    ALTER [objeto] [nome do objeto] [opções];
+    DROP [objeto] [nome do objeto] [opções];
+    ```
+
+    Boas práticas:
+
+    ```sql
+    CREATE [objeto] IF NOT EXISTS [nome do objeto] [opções];
+    ALTER [objeto] [nome do objeto] OWNER TO [role];
+    DROP [objeto] IF EXISTS [nome do objeto];
+    ```
+
+    
+
