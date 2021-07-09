@@ -746,3 +746,59 @@ Alguns exemplos de funções agregadas:
     ```
 
 ## JOINS
+
+- ### JOIN (INNER JOIN)
+
+  ```sql
+  SELECT tabela1.campos, tabela2.campos 
+  FROM tabela1 
+  JOIN tabela2 ON tabela2.campos = tabela1.campos;
+  ```
+
+  
+
+- ### LEFT JOIN ( LEFT OUTER JOIN)
+
+  ```sql
+  SELECT tabela1.campos, tabela2.campos 
+  FROM tabela1 
+  LEFT JOIN tabela2 
+  ON tabela2.campos = tabela1.campos;
+  ```
+
+  
+
+- ### RIGHT JOIN (RIGHT OUTER JOIN)
+
+  ```sql
+  SELECT tabela1.campos, tabela2.campos 
+  FROM tabela1 
+  RIGHT JOIN tabela2 
+  ON tabela2.campos = tabela1.campos;
+  ```
+
+  
+
+- ### FULL JOIN (FULL OUTER JOIN)
+
+  ```sql
+  SELECT tabela1.campos, tabela2.campos 
+  FROM tabela1 
+  FULL JOIN tabela2 
+  ON tabela2.campos = tabela1.campos;
+  ```
+
+  
+
+- ### CROSS JOIN (CROSS OUTER JOIN)
+
+  Todos os dados de uma tabela serão cruzados com todos os dados da tabela referenciada no CROSS JOIN criando uma matriz. 
+
+  ```sql
+  SELECT tabela1.campos, tabela2.campos 
+  FROM tabela1 
+  CROSS JOIN tabela2;
+  ```
+
+  
+
