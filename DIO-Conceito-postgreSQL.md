@@ -542,5 +542,207 @@
     DROP [objeto] IF EXISTS [nome do objeto];
     ```
 
-    
 
+## DML e o Truncate
+
+- #### `Idempotência`: 
+
+  `Definição`: propriedade que algumas ações/operações possuem possibilitando-as de serem executadas diversas vezes sem alterar o resultado após a aplicação inicial.
+
+- ### Melhores práticas em DDL
+
+  Importante as tabelas possuírem campos que realmente  serão utilizados e que sirvam de atributo direto a um objetivo em comum.
+
+  - Criar/Acrescentar colunas que são "atributos básicos" do objetivo; Exemplo: tabela CLIENTE: coluna TELEFONE / coluna AGENCIA_BANCARIA.
+  - Cuidado com regras (constraints).
+  - Cuidado com o excesso de FKs.
+  - Cuidado com o tamanho indevido de colunas. Exemplo: coluna CEP VARCHAR (255).
+
+- ### **DML - CRUD**
+
+  - #### `SELECT`
+
+  ```sql
+  SELECT (campos) FROM tablea [condições];
+  Condições: 
+  	WHERE campo IS TRUE;
+  	WHERE campo LIKE "condição do campo";
+  ```
+   - #### Condições:
+
+     - `WHERE (coluna/condição)`:
+       - =
+       - .> /  >=
+       - < / <=
+       - <> / !=
+       - LIKE
+       - ILIKE
+       - IN
+     
+      Primeiro condição sempre WHERE. Demais condições, AND ou OR.
+     
+  - SELECT - Idempotência
+
+    ```sql
+    SELECT (campos)
+    FROM tabela
+    WHERE EXISTIS (
+    	SELECT (campo)
+        FROM tabela
+        WHERE campo = valor
+        [AND/OR campoN = valorN]
+    );
+    ```
+
+    Não é uma boa prática. A melhor é utilizar o `LEFT JOIN`.
+
+    WARNING :warning: : SELECT * (Evitar)
+
+  - #### `INSERT`
+
+    ```sql
+    INSERT (campos da tabela) VALUES (values);
+    INSERT (campos da tabela) SELECT (values);
+    ```
+
+  - INSERT - Idempotência
+
+    ```sql
+    INSERT INTO tabela (campos da tabela) VALUES (values);
+    
+    INSERT INTO tabela (campos da tabela)
+    	SELECT {dados a serem inseridos: dado1,dado2,dado3}
+    	WHERE NOT EXISTS (SELECT (campos da tabela) WHERE campo1 = dado1 AND campo2 = dado2 AND campo3 = dado3);
+    ```
+
+    - ON CONFLICT
+
+    ```sql
+    INSERT INTO tabela (campos da tabela) VALUES (values) ON CONFLICT (campos tabela) DO NOTHING;
+    ```
+
+  - #### `UPDATE`
+
+    ```sql
+    UPDATE (tabela) SET campo1= valor WHERE (condição);
+    ```
+
+  - #### `DELETE`
+
+    ```sql
+    DELETE FROM (tabela) SET campo1 = valor WHERE (condição);
+    ```
+
+- ### Truncate
+
+  `Definição`: esvazia a tabela.
+
+  ```sql
+  TRUNCATE [TABLE] [ONLY] name [*] [...]
+  	[RESTART IDENTITY | CONTINUE IDENTITY] 
+  	[CASCADE | RESTRICT]
+  ```
+
+## Funções Agregadas
+
+Como são muitas funções o site oficial para consulta é o seguinte : [https://www.postgresql.org/docs/13/functions-aggregate.html]()
+
+Alguns exemplos de funções agregadas:
+
+- AVG
+
+  ```sql
+  SELECT AVG(valor) FROM cliente_transacoes;
+  ```
+
+- COUNT
+
+  ```sql
+  SELECT COUNT(numero)
+  	FROM cliente;
+  ```
+
+  Com condições:
+
+  ```sql
+  SELECT COUNT(numero), email
+  	FROM cliente
+  	WHERE email ILIKE '%gmail.com'
+  	GROUP BY email;
+  ```
+
+- MAX
+
+  ```sql
+  SELECT MAX(numero)
+  	FROM cliente;
+  ```
+
+  Com o `GROUP BY`:
+
+  ```sql
+  SELECT MAX(valor) tipo_transacao_id
+  	FROM cliente_transacoes
+  	GROUP BY tipo_transacao_id;
+  ```
+
+- MIN
+
+  ```sql
+  SELECT MIN(numero)
+  	FROM cliente;
+  ```
+
+  Com o `GROUP BY`:
+
+  ```sql
+  SELECT MIN(valor) tipo_transacao_id
+  	FROM cliente_transacoes
+  	GROUP BY tipo_transacao_id;
+  ```
+
+- COUNT
+
+  ```sql
+  SELECT COUNT (id), tipo_transacao_id
+  	FROM cliente_transacoes
+  	GROUP BY tipo_transacao_id;
+  ```
+
+  Como o `HAVING`:
+
+  ```sql
+  SELECT COUNT (id), tipo_transacao_id
+  	FROM cliente_transacoes
+  	GROUP BY tipo_transacao_id
+  	HAVING COUNT (id) > 150;
+  ```
+
+- SUM
+
+  ```sql
+  SELECT SUM(valor)
+  	FROM cliente_transacoes;
+  ```
+
+  Com o `ORDER BY`:
+
+  - Ascendente:
+
+    ```sql
+    SELECT SUM(valor), tipo_transacao_id
+    	FROM cliente_transacoes
+    	GROUP BY tipo_transacao_id
+    	ORDER BY tipo_transacao_id ASC;
+    ```
+
+  - Descendente:
+
+    ```sql
+    SELECT SUM(valor), tipo_transacao_id
+    	FROM cliente_transacoes
+    	GROUP BY tipo_transacao_id
+    	ORDER BY tipo_transacao_id DESC;
+    ```
+
+## JOINS
