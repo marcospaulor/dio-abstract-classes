@@ -802,3 +802,217 @@ Alguns exemplos de funções agregadas:
 
   
 
+## Commom Table Expression - CTE
+
+`Definição`: forma auxiliar de organizar "statements", ou seja, blocos de códigos, para consultas muitos grandes, gerando tabelas temporárias e criando relacionamento entre elas.
+
+Dentro dos statements podem ter SELECTs, INSERTs, UPDATEs ou DELETEs.
+
+- `WITH STATEMENTS`:
+
+  ```sql
+  WITH [nomeTempTable1] AS (
+  	SELECT (campos)
+      FROM tabela_a
+      [WHERE]
+  ), [nomeTempTable2] AS (
+  	SELECT (campos)
+      FROM table_b
+      [WHERE]
+  )
+  SELECT [nomeTempTable1].(campos),[nomeTempTable2].(campos) 
+  FROM [nomeTempTable1]
+  JOIN [nomeTempTable2];
+  ```
+
+  
+
+## VIEWS
+
+`Definição`: são visões, "camadas" para as tabelas, "alias" para uma ou mais queries. Aceitam comando de SELECT, INSERT, UPDATE e DELETE.
+
+```sql
+CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] VIEW name [(column_name[...])]
+	[WITH (view_option_name [= view_option_value] [...])]
+	AS query
+	[WITH [CASCADED | LOCAL] CHECK OPTION]
+```
+
+- #### IDEMPOTÊNCIA
+
+  ```sql
+  CREATE OR REPLACE VIEW vw_bancos AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+  );
+  
+  SELECT numero, nome, ativo
+  	FROM vw_bancos;
+  	
+  CREATE OR REPLACE VIEW vw_bancos (banco_numero, banco_nome, banco_ativo) AS (
+  	SELECT numero, nome, ativo
+      FROM banco
+  );
+  
+  SELECT banco_numero, bano_nome, banco_ativo
+  	FROM vw_bancos;
+  ```
+
+- #### INSERT, UPDATE e DELETE
+
+  ```sql
+  CREATE OR REPLACE VIEW vw_bancos AS(
+  	SELECT numero,nome,ativo
+      FROM banco
+  );
+  
+  SELECT numero,nome,ativo
+  FROM vw_bancos;
+  ```
+
+  - Funcionam apenas para VIEWs com apenas 1 tabela.
+
+  ```sql
+  INSERT INTO vw_bancos (numero,nome,ativo) VALUES (100, 'Banco CEM', TRUE);
+  
+  UPDATE vw_bancos SET nome = 'Banco 100' WHERE numero = 100;
+  
+  DELETE FROM vw_bancos WHERE numero = 100;
+  ```
+
+- #### TEMPORARY
+
+  ```sql
+  CREATE OR REPLACE TEMPORARY VIEW vw_bancos AS (
+  	SELECT numero, nome, ativo
+  	FROM banco
+  );
+  
+  SELECT numero, nome, ativo
+  FROM vw_bancos;
+  ```
+
+  VIEW presente apenas na sessão do usuário. Se você se desconectar e conectar novamente, a VIEW não estará disponível.
+
+- #### RECURSIVE
+
+  ```sql
+  CREATE OR REPLACE RECURSIVE VIEW (nome_da_view)(campos_da_view) AS (
+  	SELECT base
+      UNION ALL
+      SELECT campos
+      FROM tabela_base
+      JOIN (nome_da_view)
+  );
+  ```
+
+  - Obrigatório a existência dos campos da VIEW.
+  - UNION ALL - não unifica resultados iguais
+
+  ```SQL
+  CREATE TABLE IF NOT EXISTS funcionarios(
+  	id SERIAL NOT NULL,
+      nome VARCHAR(50),
+      gerente INTEGER,
+      PRIMARY KEY (id),
+      FOREIGN KEY (gerente) REFERENCES funcionarios (id)
+  );
+  
+  CREATE OR REPLACE RECURSIVE VIEW vw_funcionarios(id,gerente,funcionario) AS (
+  	SELECT id,gerente,nome
+      FROM funcionarios
+      WHERE gerente IS NULL
+      UNION ALL
+      SELECT funcionarios.id,funcionarios.gerente, funcionarios.nome
+      FROM funcionarios
+      JOIN vw_funcionarios ON vw_funcionarios.id = funcionarios.gerente
+  );
+  
+  SELECT id,gerente,funcionario
+  	FROM vw_funcionarios
+  	
+  -- or
+  
+  CREATE OR REPLACE RECURSIVE VIEW vw_funcionarios(id,gerente,funcionario) AS (
+  	SELECT id,CAST(AS VARCHAR) AS gerente,nome
+      FROM funcionarios
+      WHERE gerente IS NULL
+      UNION ALL
+      SELECT funcionarios.id,funcionarios.gerente, funcionarios.nome
+      FROM funcionarios
+      JOIN vw_funcionarios ON vw_funcionarios.id = funcionarios.gerente
+      JOIN funcionarios gerentes ON gerentes.id = vw_funcionarios.id
+  );
+  
+  SELECT id,gerente,funcionario
+  	FROM vw_funcionarios
+  ```
+
+  
+
+- #### WITH OPTIONS
+
+  ```sql
+  CREATE OR REPLACE VIEW vw_bancos AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+  );
+  
+  INSERT INTO vw_bancos (numero, nome, ativo) VALUES (100, 'Banco CEM', FALSE);
+  
+  -- OK
+  
+  CREATE OR REPLACE VIEW vw_bancos AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+      WHERE ativo IS TRUE
+  ) WHIT LOCAL CHECK OPTION;
+  
+  INSERT INTO vw_bancos (numero, nome, ativo) VALUES (100, 'Banco CEM', FALSE);
+  
+  -- ERRO
+  ```
+
+  ```sql
+  CREATE OR REPLACE VIEW vw_bancos_ativos AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+      WHERE ativo IS TRUE
+  ) WHIT LOCAL CHECK OPTION;
+  
+  CREATE OR REPLACE VIEW vw_bancos_maiores_que_100 AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+      WHERE numero > 100
+  ) WHIT LOCAL CHECK OPTION;
+  
+  INSERT INTO vw_bancos_maiores_que_100 (numero, nome, ativo) VALUES (99, 'Banco CEM', FALSE);
+  -- ERRO
+  
+  INSERT INTO vw_bancos (numero, nome, ativo) VALUES (200, 'Banco CEM', FALSE);
+  -- ERRO
+  ```
+
+  ```sql
+  CREATE OR REPLACE VIEW vw_bancos_ativos AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+      WHERE ativo IS TRUE
+  );
+  
+  CREATE OR REPLACE VIEW vw_bancos_maiores_que_100 AS (
+  	SELECT numero,nome,ativo
+      FROM banco
+      WHERE numero > 100
+  ) WHIT CASCADE CHECK OPTION;
+  
+  INSERT INTO vw_bancos_maiores_que_100 (numero, nome, ativo) VALUES (99, 'Banco CEM', FALSE);
+  -- ERRO
+  
+  INSERT INTO vw_bancos (numero, nome, ativo) VALUES (200, 'Banco CEM', FALSE);
+  -- OK
+  ```
+
+  
+
+  
