@@ -1015,4 +1015,179 @@ CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] VIEW name [(column_name[...])
 
   
 
+
+## Transações
+
+`Definição`: conceito fundamental de todos os sistemas de banco de dados. Conceito de múltiplas etapas/códigos reunidos em apenas 1 transação, onde o resultado precisa ser **tudo ou nada**.
+
+Exemplo:
+
+```sql
+BEGIN; -- caso de erro é executado um ROLLBACK
+	
+		UPDATE conta SET valor = valor - 100
+		WHERE nome = 'Alice';
+		
+		UPDATE conta SET valor = valor + 100
+		WHERE nome = 'Bob';
+		
+ROLLBACK; -- Desfraz as transações
+```
+
+```sql
+BEGIN; -- caso de erro é executado um ROLLBACK
+	
+		UPDATE conta SET valor = valor - 100
+		WHERE nome = 'Alice';
+		
+SAVEPOINT my_savepoint; -- Declara o save point
+
+		UPDATE conta SET valor = valor + 100
+		WHERE nome = 'Bob';
+		-- ops ... não era para o Bob, é para a Wally
+
+ROLLBACK TO my_savepoint; -- cancela o save point
+
+		UPDATE conta SET valor = valor + 100
+		WHERE nome = 'Wally';
+		
+COMMIT; -- Mostra a alteração a outros devs.
+```
+
+
+
+## Funções
+
+`Definição`: conjunto de códigos que são executados **dentro de uma transação** com a finalidade de facilitar a programação e obter o reaproveitamento/reutilização de códigos.
+
+Existem 4 tipos de funções:
+
+- query language functions (funções escritas em SQL).
+- procedural language functions (funções escritas em, por exemplo, PL/pgSQL ou PL/py).
+- Internal functions.
+- C-language functions.
+
+Porém o foco aqui é falar sobre **USER DEFINED FUNCTIONS**. Funções que podem ser criados pelo usuário.
+
+
+
+### **PL/pgSQL**:
+
+```sql
+CREATE [OR REPLACE] FUNCTION
+	name ([argmode] [argname] argtype[{DEFAULT | =} default_expr][...])
+	[RETURNS TABLE (column_name column_type [...])]
+	{ LANGUAGE lang_name
+		| 	TRANSFORM {FOR TYPE type_name} [...]
+		| WINDOW
+		| IMMUTABLE | STABLE | VOLATILE | [NOT] LEAKPROOF
+		|CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT
+		| [EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER
+		| PARALLEL {UNSAFE | RESTRICTED | SAFE}
+		| COST exection_cost
+		| ROWS result_rows
+		| SET configuration_parameter {TO value | = value| FROM CURRENT}
+		| AS 'definition'
+		| AS 'obj_file', 'link_symbol'
+	} ...
+```
+
+- ### IDEMPOTÊNCIA
+
+  CREATE **OR REPLACE** FUNCTION [nome da função]
+
+  - Mesmo nome
+  - Mesmo tipo de retorno
+  - Mesmo número de parâmetros/argumentos
+
+- ### Returns
+
+  - #### Tipo de retorno (data type)
+
+    - INTEGER
+    - CHAR/ VARCHAR
+    - BOOLEAN
+    - ROW
+    - TABLE
+    - JSON
+
+- ### Language
+
+  - **SQL**
+  - **PLPGSQL**
+  - PLJAVA
+  - PLPY
+
+- ### Security
+
+  - INVOKER
+  - DEFINER
+
+- ### Comportamento
+
+  - **IMMUTABLE**: não pode alterar o banco de dados. Funções que garantem o mesmo resultado para os mesmos argumentos/parâmetros da função. Evitar a utilização de selects, pois tabelas podem sofrer alterações.
+  - **STABLE**: não pode alterar banco de dados. Funções que garantem o mesmo resultado para os mesmo argumentos/parâmetros da função. Trabalha melhor com tipos de current_timestamp e outros tipos de vaiáveis. Podem conter selects.
+  - **VOLATILLE**: comportamento padrão. Aceita todos os cenários.
+
+- ### Segurança e boas práticas
+
+  - **CALLED ON NULL INPUT**: padrão. Se qualquer um dos parâmetros/argumentos for NULL, a função será executada.
+  - **RETURNS NULL ON NULL INPUT**: se qualquer um dos parâmetros/argumentos for NULL, a função retornará NULL.
+  - **SECURITY INVOKER**: padrão. A função é executada com as permissões de quem executa.
+  - **SECURITY DEFINER**: a função é executada com as permissões de quem criou a função.
+
+- ### Recursos
+
+  - **COST**: custo/row em unidades de CPU.
+  - **ROWS**: número estimado de linhas que será analisada pelo planner.
+
+- ### SQL FUNCTIONS
+
+  ```sql
+  CREATE OR REPLACE fc_bancos_add(p_numero INTEGER, p_nome VARCHAR, p_ativo BOOLEAN)
+  RETURNS TABLE (numero INTEGER, nome VARCHAR)
+  RETURNS NULL ON NULL INPUT
+  LANGUAGE SQL
+  AS $$
+  		INSERT INTO banco(numero,nome,ativo)
+  		VALUES (p_numero,p_nome,p_ativo);
+  		
+  		SELECT numero, nome
+  		FROM banco
+  		WHERE numer = p_numero;
+  		
+  $$;
+  ```
+
+- ### PLPGSQL
+
+  ```sql
+  CREATE OR REPLACE FUNCTION banco_add (p_numero INTEGER, p_nome VARCHAR, p_ativo BOOLEAN)
+  RETURNS BOOLEAN
+  LANGUAGE PLPGSQL
+  AS $$
+  DECLARE variavel_id INTEGER;
+  BEGIN
+  		SELECT INTO variavel_id numero FROM banco WHERE nome = p_nome;
+  		
+  		IF variavel_id IS NULL THEN
+  				INSERT INTO banco(numero, nome, ativo) VALUES (p_numero,p_nome,p_ativo);
+  		ELSE
+  				RETURN FALSE;
+  				
+  		END IF;
+  		
+  		SELECT INTO variavel_id nuemro FROM banco WHERE nome = p_nome;
+  		
+  		IF variavel_id IS NULL THEN
+  				RETURN FALSE;
+  		ELSE
+  				RETURN TRUE;
+  				
+  		END IF;
+  END; $$;
+  
+  SELECT banco_add(13,'Banco azarado', true);
+  ```
+
   
