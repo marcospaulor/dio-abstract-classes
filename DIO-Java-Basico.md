@@ -55,3 +55,15 @@ Com falta de investimento da Oracle no Java, ela cedeu todo o código, implement
 Agora a evolução das especificações e padrões Java será feito sob o nome Jakarta EE, com compatibilidade com o Java EE.
 
 ## Característica da Linguagem Java
+
+### Classes
+
+
+
+### Tipos
+
+### Modificadores de acesso
+
+### Interfaces
+
+### Enums
