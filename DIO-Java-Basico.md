@@ -58,9 +58,272 @@ Agora a evolução das especificações e padrões Java será feito sob o nome J
 
 ### Classes
 
+- Main
 
+  A classe Main resumidamente, será uma classe que executaria o programa.
+
+  ```java
+  package exemplo.projeto.main; //Pacote genérico
+  
+  public class Programa{
+      //Esta é a classe main. Com assinatura String[] args.
+      public static void main(String[] args){
+          System.out.println("Executa Programa");
+      }
+  }
+  ```
+
+  
+
+- Atributos
+
+  O atributos de uma classe são basicamente variáveis em que podem ser acessadas de acordo com construtores(através de instancias) e métodos.
+
+  ```java
+  public class Pessoa{
+      private int idade;
+      protected String senha;
+      public String nome; //Não há a necessidade de informar o public
+  }
+  ```
+
+  
+
+- Métodos
+  - Retornos
+  
+    De acordo com o tipo da função o método irá retornar o mesmo tipo.
+  
+    ```java
+    private String getSenha(){
+        return senha; //retorna o atributo da classe Pessoa
+    }
+    ```
+  
+    
+  
+  - Parâmetros
+  
+    São valores em que o construtor e métodos possuem, onde geralmente há a passagem de valor.
+  
+    ```java
+    //Estão entre parênteses name e sruname
+    public String getNameAndSurname(String name, String surname){
+        return System.out.println(name + " " + surname);
+    }
+    ```
+  
+    
+  
+  - Assinatura
+  
+    Tem correlação com o nome do método e os parâmetros.
+    
+    ```java
+    //Está é assinatura do método acima
+    getNameAndSurname(String,String);
+    ```
+    
+    
+  
+- Construtores
+
+  Método particular que define como instanciar a classe em sua criação.
+
+  ```java
+  public class Pessoa{
+      private String login;
+      protected String senha;
+      String nome;
+      
+      //Construtor com dois parâmetros login e senha
+      public Pessoa(final String login, final String senha){
+          this.login = login;
+          this.senha = senha;
+      }
+  }
+  ```
+
+  
 
 ### Tipos
+
+- Primitivos
+
+  Um tipo primitivo nunca pode ser nulo.
+
+  - Inteiro
+
+    Valor padrão: 0
+
+    ```java
+    int i = 2147483647;				//32 bits
+    int i1 = -2147473648;
+    //int i1 = -2147473649;			//To large
+    ```
+
+    
+
+  - String
+
+    Valor padrão: null
+
+  - Char
+
+    Valor padrão: '\u000'
+
+    ```java
+    char c;							//16 bits
+    char c1 = 'A';
+    char c2 = 15;
+    //char c3 = 'AA';				//NOK
+    //char c4 = -100;				//NOK
+    ```
+
+    
+
+  - Short
+
+    Valor padrão: 0
+
+    ```java
+    short s;					//16 bits
+    short s1 = 32767;
+    short s2 = -32768;
+    ```
+
+    
+
+  - Byte
+
+    Valor padrão: 0
+
+    ```java
+    byte b;						//8 bits
+    byte b1 = 127;
+    byte b2 = -128;
+    //byte b3 = 129; 			//to large
+    ```
+
+    
+
+  - Float
+
+    Valor padrão: 0.0f
+
+    ```java
+    float f = 64f;			//32 bits
+    float f2 = 65.0f;
+    float f3 = -0.5f
+    ```
+
+    
+
+  - Double
+
+    Valor padrão: 0.0d
+
+    ```java
+    double d = 1024.99;		//64 bits
+    double d2 = 20.2456;
+    ```
+
+    
+
+  - Boolean
+
+    Valor padrão: false
+
+    ```java
+    boolean bo = true;
+    boolean bo2 = false;
+    //boolean bo3 = "false";		//NOK
+    //boolean bo4 = 'true';			//NOK
+    ```
+
+    
+
+  - Long
+
+    Valor padrão: 0L
+
+    ```java
+    long l = 9223372036854775807L;	//64 bits
+    long l2 = -9223372036854775808L;
+    //long l3 = -9223372036854775809L; // To large
+    ```
+
+    
+
+- Wrappers
+
+  São objetos que representam os primitivos. Geralmente representados com a primeiro letra maiúcula.
+
+  ```java
+  Byte b;
+  Character c;
+  Short s;
+  Integer i;
+  Long l;
+  Float f;
+  Double d;
+  Boolean bo;
+  ```
+
+  
+
+  - Auto-boxing
+
+    Auto inicializa o objeto, com isso é possível utilizar valores **nulos**.
+
+  - Unboxing
+
+    É possível atribuir os wrappers aos tipos primitivos
+
+    ```java
+    int i = new Integer(3);
+    int inteiro = Integer.valueOf(1024);
+    boolean bo =  new Boolean(true);
+    boolean boleano = Boolean.TRUE;
+    ```
+
+    
+
+- Não Primitivos
+
+  - Void
+
+    ```java
+    Void v;
+    ```
+
+    
+
+  - String
+
+    ```java
+    String text = "Meu texto";
+    ```
+
+    
+
+  - Number
+
+    ```java
+    Number numero = 100;
+    ```
+
+    
+
+  - Object
+
+    ```java
+    Object o = new Object();
+    ```
+
+    
+
+- Tipagem Forte e Estática
 
 ### Modificadores de acesso
 
