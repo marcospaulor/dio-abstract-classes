@@ -450,3 +450,177 @@ public enum TipoVeiculo{
 }
 ```
 
+
+
+### Strings
+
+É uma sequencia de caracteres.
+
+Pacote **java.lang**;
+
+```java
+//Classe exemplo
+public class String{
+    var nome = "Marcos";
+    var sobreNome = "Rodrigues";
+    //Tipos de concatenção de Strings
+    final var nomeCompleto = nome + sobreNome;
+    System.out.println("Nome: " + nome);
+    System.out.println("Nome completo: " + nomeCompleto);
+    
+    //Exemplos de conteúdos dentro da classe String
+    var string = new String("Minha string");
+    
+    System.out.println("Char na posição: " + string.charAt(5));
+    System.out.println("Quantidade = " + string.length());
+    System.out.println("Sem trim [" + string + "]");
+    System.out.println("Com trim [" + string.trim() + "]");
+    System.out.println("Lower: " + string.toLowerCase());
+    System.out.println("Upper: " + string.toUpperCase());
+    System.out.println("Contém M?" + string.contains("M"));
+    System.out.println("Replace: " + string.replace("n","$"));
+    System.out.println("Equals?" + string.equals("Minha string"));
+    System.out.println("EqualsIgnoreCase?" + string.equalsIgnoreCase("minha String"));
+    System.out.println("Substring(1,6)" + string.substring(1,6));
+}
+```
+
+Outro exemplo mas dessa vez com o ***Format***.
+
+```java
+public class StringFormat{
+    var nome = "Marcos";
+    var sobreNome = "Rodrigues";
+    final var nomeCompleto = nome + sobreNome;
+    
+    final var mensagem = String.format("O sobrenome do %s é o %s.", nome, sobreNome);
+    System.out.println(mensagem);
+    
+    // No caso de valores numéricos
+    System.out.println(String.format("Número %.2f", 1.2375d));
+}
+```
+
+E também algumas funcionalidade do String Builder.
+
+```java
+var nome = "Marcos";
+
+final var builder = new StringBuilder(nome);
+System.out.println(builder.append("Paulo"));
+
+final var reverse = builder.reverse();
+
+final var insert = reverse.insert(0,"3").insert(reverse.length(), "#");
+```
+
+### Laços, Condicionais e Operadores
+
+- **IF**
+
+  ```java
+  final var condicao = true;
+  if(condicao){
+      ...
+  } else {
+      ...
+  }
+  
+  if(condicao)
+      ...
+      
+  final var ternario = condicao ? "verdadeira" : "falsa";
+  
+  //Igualdades e desigualdades
+  
+  final var numero = 10;
+  
+  if(numero == 10) {
+      System.out.println("O número é 10");
+  } else {
+      System.out.println("Não é 10");
+  }
+  
+  if(numero != 10){
+      System.out.println("Não é 10");
+  } else {
+      System.out.println("O número é 10");
+  }
+  
+  final var letra = "B";
+  
+  if("A".equals(letra)){
+      System.out.println("É a letra A");
+  }
+  
+  if(!letra.equals("A")){
+      System.out.println("Não é a letra A");
+  }
+  ```
+
+  
+
+- Operadores Matemáticos
+
+  ```java
+  var soma = 10 + 1;
+  var sub = 5 - 2;
+  var multi = 5 * 2;
+  var div = 10 / 2;
+  var resto = 8 % 2;
+  ```
+
+  
+
+- Operadores Relacionais
+
+  ```java
+  final var numero = 6;
+  
+  if(numero > 20){
+      System.out.println("Maior que 20");
+  } else if(numero >= 10){
+      System.out.println("Maior ou igual a 10");  
+  } else if(numero <= 5){
+      System.out.println("Menor ou igual a 5");
+  } else {
+      System.out.println("Nenhuma das anteriores");
+  }
+  ```
+
+  
+
+- Operadores Lógicos
+
+  ```java
+  final var numero = 2;
+  final var letra = "A";
+  
+  //Sort Circuit
+  if(numero < 5 && letra.equals("A")){
+      System.out.println("Atendeu a condição");
+  }
+  
+  if(numero < 5 || letra.equals("A")){
+      System.out.println("Atendeu a condição");
+  }
+  
+  if((10 - 5) > 5 && (5 - 3) > 1){
+      System.out.println("Imprime");
+  }
+  
+  
+  ```
+
+  
+
+- Incremento
+
+  ```java
+  ++numero; //incrementa e depois avalia a expressão
+  ```
+
+  
+
+- 
+
