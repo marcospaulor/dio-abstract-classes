@@ -148,7 +148,7 @@ Agora a evolução das especificações e padrões Java será feito sob o nome J
 
 ### Tipos
 
-- Primitivos
+- #### Primitivos
 
   Um tipo primitivo nunca pode ser nulo.
 
@@ -255,7 +255,7 @@ Agora a evolução das especificações e padrões Java será feito sob o nome J
 
     
 
-- Wrappers
+- #### Wrappers
 
   São objetos que representam os primitivos. Geralmente representados com a primeiro letra maiúcula.
 
@@ -289,7 +289,7 @@ Agora a evolução das especificações e padrões Java será feito sob o nome J
 
     
 
-- Não Primitivos
+- #### Não Primitivos
 
   - Void
 
@@ -323,10 +323,130 @@ Agora a evolução das especificações e padrões Java será feito sob o nome J
 
     
 
-- Tipagem Forte e Estática
+- #### Tipagem Forte e Estática
+
+  - Estática
+
+    Checagem de tipo em tempo de compilação
+
+  - Forte
+
+    Quando se atribui um tipo à aquela variável, o tipo nunca se altera para outro tipo 
+
+  - Ps.: Tipagem Inferida, a partir do Java 10. Onde há a utilização do tipo **var**.
 
 ### Modificadores de acesso
 
+- #### Public
+
+  Pode ser acessada de qualquer lugar por qualquer entidade que possa visualizar a classe a que ela pertence.
+
+- #### Private
+
+  Os métodos e atributos da classe definidos como privados não podem ser acessadas ou usadas por nenhuma outra classe. Esses atributos e métodos também não podem ser visualizados pelas classes herdadas.
+
+- #### Protected
+
+  Torna o membro acessível às classes do mesmo pacote ou através de herança, seus membros herdados não são acessíveis a outras classes fora do pacote em que foram declarados.
+
+- Default(Padrão)
+
+  A classe e/ou seus membros são acessíveis somente por classes do mesmo pacote, na sua declaração não é definido nenhum tipo de modificador, sendo este identificado pelo computador.
+
+- #### Abstract
+
+  Esse modificador não é aplicado nas variáveis, apenas em classes e métodos. Uma classe abstrata não pode ser instanciada. Se houver alguma declaração de um método como abstract, a classe também deve ser marcada como abstract.
+
+- #### Static
+
+  É usado para a criação de uma variável que poderá ser acessada por todas as instâncias de objetos desta classe como uma variável comum, ou seja, a variável criada será a mesma em todas as instancias e quando seu conteúdo é modificado numa das instâncias, a modificação ocorre em todas as demais. E nas declarações de métodos ajudam no acesso direto à classe, portanto não é necessários instanciar um objetos para acessar o método.
+
+- #### Final
+
+  Quando é aplicado na classe, não permite estender, nos métodos impede que o mesmo seja sobrescrito(overriding) na subclasse, e no valores de variáveis não pode ser alterado depois que já tenha sido atribuído um valor.
+
 ### Interfaces
 
+```java
+public interface Display{
+    ...
+}
+```
+
+
+
+- Métodos Abstratos
+
+  Devem ser implementados por todos;
+
+  Novos métodos quebram as implementações;
+
+  ```java
+  public interface Display{
+      String marca(); //método abstrato
+      default void ligar(){
+          System.out.println("Ligar tela");
+      };
+  }
+  
+  //Implementação
+  
+  public class Tela implements Display{
+      @Override
+      public String marca(){
+          return "Samsung";
+      }
+  }
+  ```
+
+  
+
+- Métodos Default
+
+  São herdados a todos que implementam;
+
+  Novos métodos não quebram as implementações;
+
+  ```java
+  public interface Display{
+      String marca(); 
+      
+      // Método Default
+      default void ligar(){
+          System.out.println("Ligar tela");
+      };
+  }
+  ```
+
+  
+
+- Herança Múltipla
+
+  ```java
+  public class Tela implements Display, Size{
+      ...
+  }
+  ```
+
+  
+
 ### Enums
+
+- Basicamente é um dicionário de dados imutável.
+
+- Não é permitido criar novas instâncias.
+
+- O construtor é sempre declarado como private;
+
+- Por convenção, por serem objetos constantes e imutáveis (static final), os nomes são em maiúsculos.
+
+```java
+public enum TipoVeiculo{
+    
+    TERRESTRE,
+    AQUATICO,
+    AEREO
+    
+}
+```
+
