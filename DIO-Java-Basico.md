@@ -656,7 +656,55 @@ final var insert = reverse.insert(0,"3").insert(reverse.length(), "#");
   } while(y++ < 1);
   ```
 
-  
+### Convenções de Nomes
 
-- 
+#### Nomes de Classes 
+
+As classes, possuem sempre a primeira letra maiúscula. E em classes que possuem nomes compostos, os primeiras letras de cada palavra também são maiúsculas.
+
+```java
+class Classe{
+    ...
+}
+
+class ClasseComposta{
+    ...
+}
+```
+
+#### Nomes de Métodos
+
+Os métodos possuem nomes com todas as letra minúsculas. E se composto, a primeira palavra totalmente minúscula e as outras palavras sempre com primeira letra maiúscula.
+
+```java
+public static void metodo(){
+    ...
+}
+
+public static void metodoComposto(){
+    ...
+}
+```
+
+
+
+#### Nome de Variáveis
+
+Devem ser auto explicativas e não são inseridos números nos nomes das variáveis. Sempre minúscula.
+
+```java
+var numero = 10;
+var nome = "Marcos";
+var sobreNome = "Rodrigues";
+```
+
+### Plugins
+
+Ver tutoriais sobre eles.
+
+- #### Checkstyle Gradle Plugin
+
+- #### PMD Grade Plugin
+
+
 
