@@ -617,7 +617,43 @@ final var insert = reverse.insert(0,"3").insert(reverse.length(), "#");
 - Incremento
 
   ```java
+  var numero = 1;
+  
   ++numero; //incrementa e depois avalia a expressão
+  numero++; //avalia a expressão depois incrementa
+  ```
+
+- For
+
+  ```java
+  for(int i = 0; i <= 10; i++){
+      System.out.println("I = " + i);
+  }
+  
+  //Looping infinito
+  
+  for( ; ; ){...Instrução}
+  ```
+
+  
+
+- While
+
+  ```java
+  while(x< 1){
+      System.out.println("Dentro do While");
+      x++;
+  }
+  ```
+
+  
+
+- Do While
+
+  ```java
+  do{
+      System.out.println("Dentro do Do/While");
+  } while(y++ < 1);
   ```
 
   
