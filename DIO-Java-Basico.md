@@ -706,5 +706,453 @@ Ver tutoriais sobre eles.
 
 - #### PMD Grade Plugin
 
+## Trabalhando com datas
 
+### java.util.Date
+
+A implementação do **java.util.Date** está na JDK desde sua versão 1.0. É de se esperar que algumas coisas não se mostrem tão interessantes nos dias atuais, dado a sua idade.
+
+Documentação oficial: https://docs.oracle.com/javase/8/docs/api/java/util/Date.html
+
+Construtores principais da classe:
+
+```java
+Date();
+
+Date(int year, int month, int date); //Deprecated
+
+Date(int year, int month, int date, int hrs, int min); // Deprecated
+
+Date(int year, int month, int date, int hrs, int min, int sec); // Deprecated
+
+Date(long date);
+
+Date(String s); // Deprecated
+```
+
+- **Date( )**
+
+  Este construtor vai alocar um objeto da classe Date e o **inicializará com o milissegundo mais próximo** do período da sua execução. 
+
+  Exemplo:
+
+  ```java
+  import java.util.Date;
+  
+  public class Exemplo{
+      public static void main(String[] args){
+          
+          Date novaData = new Date();
+          System.out.println(novaData);
+          
+      }
+  }
+  ```
+
+  
+
+- **Date(long date)**
+
+  Diferente do construtor anterior, esse construtor espera que você passe os milissegundos com base padrão de tempo (epoch) que usa como referência **1 de janeiro de 1970 00:00:00**.
+
+  - O que é **Epoch**?
+
+    É um padrão largamente aceito para representar uma data como um inteiro 32-bits a partir do início do **Unix Epoch.**
+
+    
+
+  O método **System.currentTimeMIllis( )**, método estático vai nos retornar o milissegundo mais próximo de sua execução com base no S.O.
+
+  Exemplo:
+
+  ```java
+  import java.util.Date;
+  
+  public class Exemplo{
+      public static void main(String[] args){
+          long currentTimeMillis = System.currentTimeMillis();
+       
+          System.out.println(currentTimeMillis);
+  		// 1563127311564 
+          
+          Date novaData = new Date(currentTimeMillis);
+          
+          System.out.println(novaData);
+          //Sun Jul 14 15:01:51 BRT 2019
+      }
+  }
+  ```
+
+
+
+**Métodos Úteis:**
+
+|   **Método**    | **Retorno** |                        **Descrição**                         |
+| :-------------: | :---------: | :----------------------------------------------------------: |
+|   after(Date)   |   boolean   | Checa se  o objeto Data de referência é posterior ao comparado. |
+|  before(Date)   |   boolean   | Checa se o objeto Data de referência é atingida ao comparado. |
+| compareTo(Date) |     int     |                  Compara dois objetos Data.                  |
+|  equals(Date)   |   boolean   |               Checa se os objetos são iguais.                |
+|   getTime( )    |    long     |               Retorna a data em milissegundos.               |
+|  setTime(long)  |    void     |          Define uma data com base em milissegundos.          |
+| from(Instante)  | static Date |           Define uma data com base  em um Instant.           |
+|  toInstant( )   |   Instant   |           Retorna um Instant com base em um Date.            |
+
+
+
+Exemplo do after before:
+
+```java
+import java.util.Date;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Date dataNoPassado = new Date(1513124807691L);
+        //Tue Dec 12 22:26:47 BRST 2017
+        
+        Data dataNoFuturo = new Date(1613124807691L);
+        //Fri Feb 12 08:13:27 BRST 2021
+        
+        /** Comparando se a dataNoPassado é posterior a dataNoFuturo*/
+        boolean isAfter = dataNoPassado.after(dataNoFuturo);
+        
+        System.out.println(isAfter);
+        //False
+        
+        /** Comparando se a dataNoPassado é anterior a dataNoFuturo*/
+        boolean isBefore = dataNoPassado.before(dataNoFuturo);
+        
+        System.out.println(isBefore);
+        //True
+        
+    }
+}
+```
+
+Exemplo compareTo e equals:
+
+```java
+import java.util.Date;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Date dataNoPassado = new Date(1513124807691L);
+        //Tue Dec 12 22:26:47 BRST 2017
+        
+        Data dataNoFuturo = new Date(1613124807691L);
+        //Fri Feb 12 08:13:27 BRST 2021
+        
+        Data mesmaDataNoFuturo = new Date(1613124807691L);
+        
+        /** Comparando se a dataNoPassado é posterior a dataNoFuturo*/
+        boolean isEquals = dataNoFuturo.after(mesmaDataNoFuturo);
+        
+        int compareCase1 = dataNoPassado.compareTo(dataNoFuturo); 
+        int compareCase2 = dataNoFuturo.compareTo(dataNoPassado); 
+        int compareCase3 = dataNoFuturo.compareTo(mesmaDataNoFuturo);
+        
+    }
+}
+```
+
+Classe Instant
+
+- Imutável e Thread safe;
+- Modela um ponto instantâneo de uma linha do tempo;
+- Indicado para gravar marcações temporais em eventos da sua aplicação;
+
+### java.util.Calendar
+
+É uma classe abstrata que provê métodos para converter data entre um instante específico. Possui alguns campos específicos  para manipulação como MONTH, YEAR, HOUR etc.
+
+```java
+import java.util.Calendar;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Calendar agora = Calendar.getInstance();
+        
+        System.out.println(agora);
+    }
+}
+```
+
+Manipulando datas
+
+```java
+import java.util.Calendar;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Calendar agora = Calendar.getInstance();
+        
+        System.out.println("A data corrente é:" + agora.getTime());
+        
+        agora.add(Calendar.DATE, -15);
+        System.out.println("15 dias atrás:" + agora.getTime());
+        
+        agora.add(Calendar.MONTH, 4);
+        System.out.println("4 meses depois: " + agora.getTime());
+        
+        agora.add(Calendar.YEAR, 2);
+        System.out.println("2 anos depois: " + agora.getTime());
+    }
+}
+```
+
+Imprimindo **datas** e **horas**:
+
+Aqui vão algumas maneira de se converter o resultado de um objeto **Calendar**.
+
+```java
+import java.util.Calendar;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Calendar agora = Calendar.getInstance();
+        
+        //Dom jul 14 20:58:11 BRT 2019
+        System.out.printf("%tc\n",agora);
+        
+        //2019-07-14
+        System.out.printf("%tF\n",agora);
+        
+        //07/14/19
+        System.out.printf("%tD\n",agora);
+        
+        //08:58:11 PM
+        System.out.printf("%tr\n",agora);
+        
+        //20:58:11
+        System.out.printf("%tT\n",agora);
+    }
+}
+```
+
+### java.text.DateFormat
+
+Nesse ponto em que estamos existem, basicamente, duas classes para formatação de datas. O **DateFormat** e o **SimpleDateFormat**. Ambos oferecem maneiras de formatar e parsear a saída das datas.
+
+#### DateFormat
+
+```java
+import java.util.Date;
+import java.text.DateFormat;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Date agora = new Date();
+        
+        String dateToStr = DateFormat.getInstance().format(agora);
+        
+        //14/07/19 22:40
+        System.out.println(dateToStr);
+        
+        dateToStr = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT).format(agora);
+        
+        //14 de Julho de 2019 22:40
+        System.out.println(dateToStr);
+    }
+}
+```
+
+#### SimpleDateFormat
+
+Traz uma facilidade que é definir como padrão de formatação para a saída de data que você deseja.
+
+```java
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+public class Exemplo{
+    public static void main(String[] args){
+        Date agora = new Date();
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        
+        String dataFormatada = formatter.format(agora);
+        
+        System.out.println(dataFormatada);
+    }
+}
+```
+
+### Datas no Java 8+
+
+O trabalho com datas nas versões acima do java 8, são determinadas pelo pacote java.time com as seguintes classes **LocalDate, LocalTime e LocalDateTime**.
+
+#### LocalDate
+
+É uma classe imutável para representar uma data. Seu formato padrão é **yyyy-MM-dd**.
+
+```java
+import java.time.LocalDate;
+
+public class Exemplo{
+    public static void main (String[] args){
+        
+        LocalDate hoje = LocalDate.now();
+        
+        LocalDate ontem = hoje.minusDays(1);
+        
+        //2019-07-14
+        System.out.println(hoje);
+        
+        //2019-07-13
+        System.out.println(ontem);
+    }
+}
+```
+
+#### LocalTime
+
+É uma classe imutável que representa um padrão de hora-minuto-segundo. Pode ser representado até o nível de nanosegundos. Sua utilização é similar ao **LocalDate**.
+
+```java
+import java.time.LocalTime;
+
+public class Exemplo{
+    public static void main (String[] args){
+        
+        LocalTime agora = LocalTime.now();
+        
+        LocalTime maisUmaHora = agora.plusHours(1);
+        
+        //23:53:58.421
+        System.out.println(agora);
+        
+        //00:55:37.421
+        System.out.println(maisUmaHora);
+    }
+}
+```
+
+#### LocalDateTime
+
+Funciona como uma espécie de junção entre o LocalTime e o LocalDate. Também é uma classe imutável e você consegue trabalhar com dia e hora de uma vez só. Pode também trabalhar data e hora com precisão de nanosegundos.
+
+```java
+import java.time.LocalDateTime;
+
+public class Exemplo{
+    public static void main (String[] args){
+        
+        LocalDateTime agora = LocalDateTime.now();
+        
+        LocalDate futuro = agora.plusHours(1).plusDays(1).plusSeconds(12);
+        
+        //2019-07-15T00:02:16.076
+        System.out.println(agora);
+        
+        //2019-07-17T01:02:28.076
+        System.out.println(ontem);
+    }
+}
+```
+
+## Tratamento de Exceções
+
+Requisitos básicos para aprender:
+
+- Básico de Orientação a Objeto
+- Básico de métodos encadeados
+- Básico de algoritmos
+
+### Exceptions
+
+São todos os erros que ocorrem durante o processamento de um método que podem ser esperados ou não esperados. Como o termo já diz, "Exceptions" são exceções. Falhas que não devem ocorrer rotineiramente no fluxo de um sistema.
+
+Exemplo de tratamento de exceção:
+
+```java
+public static void metodo(){
+    try{
+        new java.io.FileInputStream("arquivo.txt");
+    }catch(java;io.FileNotFoundException e){
+        System.out.println("Não foi possível abrir o arquivo para leitura");
+    }
+}
+```
+
+### Checked Exceptions
+
+São exceções esperadas, cujo fluxo ou método de uma sistema foi preparado para receber. Um bom exemplo é uma exceção de negócio, onde se deseja informar um erro caso a exceção esperada ocorra.
+
+Exemplo de checked exception:
+
+```java
+try{
+    PreparedStatement stmt = con.prepareStatement(query);
+    ...
+} catch(SQLException e){
+    throw new AcessoADadosException("Problema na criação do Statment", e);
+}
+```
+
+### Unchecked Exceptions
+
+São exceções não esperadas para o fluxo ou método de um sistema, um bom exemplo é a famosa NullPointException que ocorre quando se tenta acessar uma referência de memória vazia, ou recuperar uma instância que não existe, dentre outros motivos.
+
+Exemplo de unchecked exception:
+
+```java
+try{
+	CarroVo carro = new CarroVo();
+	carro.getPlaca();
+} catch(IntegrationException e){
+    throw new BusinessException("Erro na criação do objeto", e);
+}
+```
+
+#### Bloco Try catch
+
+Este bloco sempre é utilizado quando no processo que será executado dentro de um método é esperado um erro, então cria-se um bloco "protegido" onde qualquer erro que ocorra dentro do trecho "try" é direcionado para o trecho "catch" e sofreráo devido tratamento de erro.
+
+Exemplo de um bloco try/catch:
+
+```
+try{
+    PreparedStatement stmt = con.prepareStatement(query);
+    ...
+} catch(SQLException e){
+    throw new AcessoADadosException("Problema na criação do Statment", e);
+}
+```
+
+### Finally
+
+É um bloco de código que pode ou não ser utilizado junto ao try catch, este trecho de código sempre será executado independente se ocorrer erro ou não dentro do fluxo onde existe o try catch. Normalmente o finally é usado para liberar recursos ou para dar continuidade em um fluxo que deve ocorrer independente de erro.
+
+Exemplo de bloco finally:
+
+```java
+try{
+    PreparedStatement stmt = con.prepareStatement(query);
+    ...
+} catch(SQLException e){
+    throw new AcessoADadosException("Problema na criação do Statment", e);
+} finally{
+    stmt.close();
+}
+```
+
+### Throw e Throws
+
+- **Throws**: é a assinatura do método que será retornado caso ocorra erro para o método que fez a chamada, dentro de um fluxo encadeado.
+- **Throw**: é usado para lançar a exceção desejada, juntamente com a mensagem de erro, para o método que fez a chamada. 
+
+Exemplo de throw e throws:
+
+```java
+public String recuperaIdUsuario(String query) throws AcessoADadosException{
+    try{
+        PreparedStatement stmt = con.prepareStatement(query);
+        ...
+    } catch(SQLException e){
+        throw new AcessoADadosException("Problema na criação do Statment", e);
+    } finally{
+        stmt.close();
+    }
+}
+```
 
